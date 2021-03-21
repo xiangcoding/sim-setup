@@ -1,0 +1,10 @@
+download scripts
+chmod u+x *.sh
+
+After script "setup_env_1.sh" finished, run "build_ros.sh", at same time,
+start a new terminal to run script "build_gazebo.sh"
+
+check device id at /enclave/drone_device_id, 
+the default one is device_id_123abc,
+ modify it if you like, but use this device id in the future ros mavlink command.
+

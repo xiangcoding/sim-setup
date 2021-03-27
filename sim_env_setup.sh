@@ -1,42 +1,48 @@
 #!/bin/bash
 
-# this script will prepare software packages required by drone simulation environment 
-
-# set up essential develop environment
-sudo apt install build-essential  git curl -y
-sudo apt-get install python3-pip -y
-
-# install Java
-sudo apt install  openjdk-11-jre  -y
-
-# install Go
-sudo apt install  golang-go -y
-
 # set locale
 sudo apt update && sudo apt install locales
 sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 export LANG=en_US.UTF-8
 
+# this script will prepare software packages required by drone simulation environment 
+
+# set up essential develop environment
+sudo apt install -y build-essential \
+	python3-pip
+	
+# install Java
+sudo apt install  openjdk-11-jre  -y
+
+# install Go
+sudo apt install  golang-go -y
+
+
 # install ROS dependencies
 sudo apt install  python3-rosdep -y
 
+# pip install to $USR/.local/lib/python3.8/site-packages 
 pip3 install --user pyros-genmsg
+
+# compatibility layer between Python 2 and Python 3 (future)
+pip3 install --user future # required by mavlink router
 
 sudo apt install   gnupg2 lsb-release -y
 
-pip3 install --user future # required by mavlink router
-
 # add repo of ROS2
+sudo apt install -y curl
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 # should we use a static url? does not help
 # sudo sh -c 'echo "deb [arch=amd64] http://packages.ros.org/ros2/ubuntu focal main" > /etc/apt/sources.list.d/ros2-latest.list'
 
 sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
-sudo apt-get update
+sudo apt update
+
 # in case upgrade fails, auto fix it
-sudo apt upgrade -y
-sudo apt --fix-broken install -y
+# we do not upgrade, in order to make sw version satisfying dependency
+#sudo apt upgrade -y
+#sudo apt --fix-broken install -y
 
 # install ROS2
 sudo apt install ros-foxy-desktop -y
